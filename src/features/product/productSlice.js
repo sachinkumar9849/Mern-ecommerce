@@ -1,11 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "reselect"; // Import createSelector from reselect
-import { fetchAllProducts, fetchProductsByFilters } from "./productAPI";
 
+import { fetchAllProducts,fetchProductsByFilters, fetchBrands, fetchCategories, fetchProductById } from './productAPI';
 const initialState = {
   products: [],
+  brands:[],
+  categories:[],
   status: 'idle',
-  totalItems:0
+  totalItems:0,
+  selectedProduct:null
 };
 
 export const fetchAllProductsAsync = createAsyncThunk(
@@ -16,10 +19,40 @@ export const fetchAllProductsAsync = createAsyncThunk(
     return response.data;
   }
 );
+export const fetchAllProductByIdAsync = createAsyncThunk(
+  'product/fetchProductById',
+  async (id) => {
+    const response = await fetchProductById(id);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+
+
+
 export const fetchProductsByFiltersAsync = createAsyncThunk(
-  'product/fetchProductsByFilters',
-  async ({filter,sort,pagination}) => {
-    const response = await fetchProductsByFilters(filter,sort,pagination);
+  "product/fetchProductsByFilters",
+  async ({ filter, sort, pagination }) => {
+    const response = await fetchProductsByFilters(filter, sort, pagination);
+    return response.data;
+  }
+);
+
+// brands
+export const fetchBrandsAsync = createAsyncThunk(
+  "product/fetchBrands",
+  async () => {
+    const response = await fetchBrands();
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+// categories
+export const fetchCategoriesAsync = createAsyncThunk(
+  "product/fetchCategories",
+  async () => {
+    const response = await fetchCategories();
+    // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
 );
@@ -50,18 +83,45 @@ export const productSlice = createSlice({
         state.products = action.payload.products;
         state.totalItems = action.payload.totalItems;
       })
-      
+
+      .addCase(fetchCategoriesAsync.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchCategoriesAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.categories = action.payload;
+      })
+      .addCase(fetchBrandsAsync.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.brands = action.payload;
+        console.log("Brands data:", action.payload); // Log brands data
+      })
+      // .addCase(fetchAllProductByIdAsync.fulfilled, (state, action) => {
+      //   state.status = "idle";
+      //   state.brands = action.payload;
+      //   console.log("Brands data:", action.payload); // Log brands data
+      // })selectedProduct
+      .addCase(fetchAllProductByIdAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchAllProductByIdAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.selectedProduct = action.payload;
+      })
   },
 });
 
 export const { increment } = productSlice.actions;
 
-// Define the selectAllProducts selector using createSelector
 export const selectAllProducts = createSelector(
-  (state) => state.product.products, // Adjust this to match your state structure
+  (state) => state.product.products,
   (products) => products
 );
 export const selectTotalItems = (state) => state.product.totalItems;
+export const selectCategories = (state) => state.product.categories;
+
+export const selectProductById = (state) => state.product.selectedProduct;
+export const selectBrands = (state) => state.product.brands;
 
 // Export the reducer and the selector
 export default productSlice.reducer;
