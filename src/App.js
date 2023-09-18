@@ -1,11 +1,8 @@
 import React from "react";
-
 import Home from "./page/Home";
-// import LoginPage from "./features/auth/components/LoginPage";
-import LoginPage from "./page/LoginPage";
-import SignupPage from "./page/SignupPage";
+import Login from "./features/auth/components/Login";
+import Signup from "./features/auth/components/Signup"
 import "./App.css";
-
 import Checkout from "./page/Checkout";
 
 import {
@@ -15,39 +12,45 @@ import {
   Link,
 } from "react-router-dom";
 import Cart from "./features/cart/Cart";
-// import ProductDetail from "./page/ProductDetailPage"
 import ProductDetail from "./features/product/components/ProductDetail";
+import Protected from "./features/auth/components/Protected";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home></Home>,
+    path: '/',
+    element: (
+      <Protected>
+        <Home></Home>
+      </Protected>
+    ),
   },
   {
     path: "/login",
-    element: <LoginPage></LoginPage>,
+    element: <Login></Login>,
   },
   {
     path: "/signup",
-    element: <SignupPage></SignupPage>,
+    element: <Signup></Signup>,
   },
+
   {
     path: "/cart",
-    element: <Cart></Cart>,
+    element:<Protected><Cart></Cart></Protected>,
   },
   {
     path: "/checkout",
-    element: <Checkout></Checkout>,
+    element: <Protected><Checkout></Checkout></Protected>,
   },
   {
     path: "/product-detail/:id",
-    element: <ProductDetail></ProductDetail>,
+    element:  <Protected><ProductDetail></ProductDetail></Protected>,
   },
 ]);
 
 const App = () => {
   return (
     <div>
+      
       <RouterProvider router={router} />
     </div>
   );
