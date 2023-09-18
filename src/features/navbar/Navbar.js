@@ -5,7 +5,9 @@ import {
   XMarkIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectItems } from "../cart/cartSlice";
 
 const user = {
   name: "Tom Cook",
@@ -21,9 +23,9 @@ const navigation = [
   { name: "Reports", href: "#", current: false },
 ];
 const userNavigation = [
-  { name: 'Your Profile', link: '/' },
-  { name: 'Settings', link: '/' },
-  { name: 'Sign out', link: '/login' },
+  { name: "Your Profile", link: "/" },
+  { name: "Settings", link: "/" },
+  { name: "Sign out", link: "/login" },
 ];
 
 function classNames(...classes) {
@@ -31,7 +33,8 @@ function classNames(...classes) {
 }
 
 const Navbar = ({ children }) => {
-  
+  const items = useSelector(selectItems);
+
   return (
     <div>
       <div className="min-h-full">
@@ -84,9 +87,11 @@ const Navbar = ({ children }) => {
                             className="h-6 w-6"
                             aria-hidden="true"
                           />
-                          <span class="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 mt-[-10px]">
-                            2
-                          </span>
+                          {items.length > 0 && (
+                            <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                              {items.length}
+                            </span>
+                          )}
                         </button>
                       </Link>
 
@@ -116,7 +121,8 @@ const Navbar = ({ children }) => {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <Link  to={item.link}
+                                  <Link
+                                    to={item.link}
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
                                       "block px-4 py-2 text-sm text-gray-700"
@@ -199,9 +205,11 @@ const Navbar = ({ children }) => {
                         className="h-6 w-6"
                         aria-hidden="true"
                       />
-                      <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-                        3
-                      </span>
+                      {items.length > 0 && (
+                        <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                          {items.length}
+                        </span>
+                      )}
                     </button>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
