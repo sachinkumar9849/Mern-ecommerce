@@ -1,9 +1,5 @@
 import { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-
-import { createSlice } from "@reduxjs/toolkit";
-
+import { createSlice } from "@reduxjs/toolkit"; 
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteItemFromCartAsync,
@@ -12,13 +8,17 @@ import {
   selectItems,
   updateCartAsync,
 } from "./cartSlice";
-import { Link } from "react-router-dom";
+
+import { Dialog, Transition } from "@headlessui/react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Link, Navigate } from "react-router-dom";
 
 export default function Cart() {
-  const items = useSelector(selectItems);
+
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
 
+  const items = useSelector(selectItems);
   const totalAmount = items.reduce(
     (amount, item) => item.price * item.quantity + amount,
     0
@@ -34,6 +34,7 @@ export default function Cart() {
 
   return (
     <>
+    {!items.length && <Navigate to='/' replace={true}></Navigate>}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 bg-white mt-24">
         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-4">
@@ -112,12 +113,12 @@ export default function Cart() {
             Shipping and taxes calculated at checkout.
           </p>
           <div className="mt-6">
-            <a
-              href="#"
+            <Link
+              to="/checkout"
               className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
             >
               Checkout
-            </a>
+            </Link>
           </div>
           <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
             <p>
