@@ -1,54 +1,58 @@
-import React, { useEffect } from "react";
-import Home from "./page/Home";
-import Login from "./features/auth/components/Login";
-import Signup from "./features/auth/components/Signup";
-import "./App.css";
-import Checkout from "./page/Checkout";
+import { Counter } from './features/counter/Counter';
+import './App.css';
+import Home from './pages/Home';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   Link,
-} from "react-router-dom";
-import Cart from "./features/cart/Cart";
-import ProductDetail from "./features/product/components/ProductDetail";
-import Protected from "./features/auth/components/Protected";
-import { useDispatch, useSelector } from "react-redux";
-import { selectLoggedInUser } from "./features/auth/authSlice";
-import { fetchItemsByUserIdAsync } from "./features/cart/cartSlice";
-import PageNotFound from "./page/404";
-import OrderSuccessPage from "./page/OrderSuccessPage";
-import UserOrdersPage from "./page/UserOrdersPage";
-
+} from 'react-router-dom';
+import Cart from './features/cart/Cart';
+import CartPage from './pages/CartPage';
+import Checkout from './pages/Checkout';
+import ProductDetailPage from './pages/ProductDetailPage';
+import Protected from './features/auth/components/Protected';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectLoggedInUser } from './features/auth/authSlice';
+import { fetchItemsByUserIdAsync } from './features/cart/cartSlice';
+import PageNotFound from './pages/404';
+import OrderSuccessPage from './pages/OrderSuccessPage';
+import UserOrders from './features/user/components/UserOrders';
+import UserOrdersPage from './pages/UserOrdersPage';
+import UserProfile from './features/user/components/UserProfile';
+import UserProfilePage from './pages/UserProfilePage';
+import { fetchLoggedInUserAsync } from './features/user/userSlice';
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: (
       <Protected>
-        <Home></Home>
+       <Home></Home>
       </Protected>
     ),
   },
   {
-    path: "/login",
-    element: <Login></Login>,
+    path: '/login',
+    element: <LoginPage></LoginPage>,
   },
   {
-    path: "/signup",
-    element: <Signup></Signup>,
+    path: '/signup',
+    element: <SignupPage></SignupPage>,
   },
-
   {
-    path: "/cart",
+    path: '/cart',
     element: (
       <Protected>
-        <Cart></Cart>
+        <CartPage></CartPage>
       </Protected>
     ),
   },
   {
-    path: "/checkout",
+    path: '/checkout',
     element: (
       <Protected>
         <Checkout></Checkout>
@@ -56,40 +60,56 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/product-detail/:id",
+    path: '/product-detail/:id',
     element: (
       <Protected>
-        <ProductDetail></ProductDetail>
+        <ProductDetailPage></ProductDetailPage>
       </Protected>
     ),
   },
   {
-    path: "/order-success/:id",
-    element: <OrderSuccessPage></OrderSuccessPage>,
+    path: '/order-success/:id',
+    element: (
+      <OrderSuccessPage></OrderSuccessPage>
+    ),
   },
   {
-    path: "/orders",
-    element: <UserOrdersPage></UserOrdersPage>,
+    path: '/orders',
+    element: (
+      <UserOrdersPage></UserOrdersPage>
+    ),
   },
   {
-    path: "*",
-    element: <PageNotFound></PageNotFound>,
+    path: '/profile',
+    element: (
+      <UserProfilePage></UserProfilePage>
+    ),
+  },
+  {
+    path: '*',
+    element: (
+      <PageNotFound></PageNotFound>
+    ),
   },
 ]);
 
-const App = () => {
+function App() {
+
   const dispatch = useDispatch();
   const user = useSelector(selectLoggedInUser);
-  useEffect(() => {
-    if (user) {
-      dispatch(fetchItemsByUserIdAsync(user.id));
+
+  useEffect(()=>{
+    if(user){
+      dispatch(fetchItemsByUserIdAsync(user.id))
+      dispatch(fetchLoggedInUserAsync(user.id))
     }
-  }, [dispatch, user]);
+  },[dispatch, user])
+
   return (
-    <div>
+    <div className="App">
       <RouterProvider router={router} />
     </div>
   );
-};
+}
 
 export default App;
