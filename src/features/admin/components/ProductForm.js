@@ -39,7 +39,7 @@ const ProductForm = () => {
     if (selectedProduct && params.id) {
       setValue("title", selectedProduct.title);
       setValue("description", selectedProduct.description);
-      setValue("discountPercentage", selectedProduct.discountPercentage);
+      setValue("DiscountPercentage", selectedProduct.DiscountPercentage);
 
       setValue("stock", selectedProduct.stock);
       setValue("price", selectedProduct.price);
@@ -53,7 +53,7 @@ const ProductForm = () => {
   }, [selectedProduct, params.id, setValue]);
 
   const handleDelete = () => {
-    const product = {...selectedProduct};
+    const product = { ...selectedProduct };
     product.deleted = true;
     dispatch(updateProductAsync(product));
   };
@@ -68,10 +68,11 @@ const ProductForm = () => {
             console.log(data);
             const product = { ...data };
             product.images = [
+              product.thumbnail,
               product.image1,
               product.image2,
               product.image3,
-              product.thumbnail,
+             
             ];
 
             delete product["image1"];
@@ -79,7 +80,7 @@ const ProductForm = () => {
             delete product["image3"];
 
             product.price = +product.price;
-            product.discountPercentage = +product.discountPercentage;
+            product.DiscountPercentage = +product.DiscountPercentage;
 
             product.stock = +product.stock;
             product.rating = 0;
@@ -166,14 +167,14 @@ const ProductForm = () => {
             {/* Discount Percentage Field */}
             <div className="mb-4">
               <label
-                htmlFor="discountPercentage"
+                htmlFor="DiscountPercentage"
                 className="block text-gray-600 font-semibold"
               >
                 Discount Percentage
               </label>
               <input
                 type="number"
-                id="discountPercentage"
+                id="DiscountPercentage"
                 {...register("DiscountPercentage", {
                   required: "DiscountPercentage Is Required",
                 })}
@@ -307,22 +308,7 @@ const ProductForm = () => {
                 className="form-input mt-1 block w-full rounded-md"
               />
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="image4"
-                className="block text-gray-600 font-semibold"
-              >
-                Image 4
-              </label>
-              <input
-                type="text"
-                id="image4"
-                {...register("image4", {
-                  required: "image4 Is Required",
-                })}
-                className="form-input mt-1 block w-full rounded-md"
-              />
-            </div>
+            
           </div>
 
           {/* Submit Button */}

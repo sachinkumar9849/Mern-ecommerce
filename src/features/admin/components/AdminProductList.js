@@ -24,7 +24,7 @@ import {
   PlusIcon,
   Squares2X2Icon,
 } from "@heroicons/react/20/solid";
-import { ITEMS_PER_PAGE } from "../../../app/constants";
+import { ITEMS_PER_PAGE, discountedPrice } from "../../../app/constants";
 
 const sortOptions = [
   { name: "Best Rating", sort: "rating", order: "desc", current: false },
@@ -514,15 +514,15 @@ function ProductGrid({ products }) {
                         )}
                       </p>
                       <p className="text-sm block line-through font-medium text-gray-400">
-                        ${product.price}
+                        ${discountedPrice(product)}
                       </p>
                     </div>
-                   {product.deleted && (
-                    <div>
-                       <p>Product Deleted</p>
-                    </div>
-                   )}
                   </div>
+                  {product.deleted && (
+                    <div>
+                      <p className="text-red-500 font-bold">Product Deleted</p>
+                    </div>
+                  )}
                 </div>
               </Link>
               <Link
